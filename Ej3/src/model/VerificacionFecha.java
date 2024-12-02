@@ -1,5 +1,6 @@
 package model;
 import java.time.LocalDate;
+<<<<<<< Updated upstream
 import java.util.Calendar;
 
 
@@ -21,6 +22,12 @@ public interface VerificacionFecha {
 	     * @return true si se cumple un año, false en caso contrario.
 	     */
 	    boolean seCumpleAno();
+=======
+
+public interface VerificacionFecha {
+	
+	  
+>>>>>>> Stashed changes
 	   
    boolean hanPasadoTiempo(int meses, int anios);
 	
