@@ -2,18 +2,20 @@ package ConInterfaz;
 import java.util.*;
 //////////////////////////////////////////////////////////////////
 // Clase CCuentaCorriente: clase derivada de CCuenta
-// Más atributos y los intereses de este tipo de cuenta funcionan 
-// de forma particular (ver el método intereses())
+// Mï¿½s atributos y los intereses de este tipo de cuenta funcionan 
+// de forma particular (ver el mï¿½todo intereses())
+
+import model.IFecha;
 
 public class CCuentaCorriente extends CCuenta implements IFecha
 {
   // Atributos
-  private int transacciones; // Nº de transacciones efectuadas en la cuenta.
-  private double importePorTrans;  // Lo que cobra el banco por cada transacción 
-  private int transExentas;  // Nº de transacciones exentas
+  private int transacciones; // Nï¿½ de transacciones efectuadas en la cuenta.
+  private double importePorTrans;  // Lo que cobra el banco por cada transacciï¿½n 
+  private int transExentas;  // Nï¿½ de transacciones exentas
   
-  // Métodos. 
-  public CCuentaCorriente() {} // constructor sin parámetros
+  // Mï¿½todos. 
+  public CCuentaCorriente() {} // constructor sin parï¿½metros
   
   public CCuentaCorriente(String nom, String cue, double sal,
                           double tipo, double imptrans, int transex)
@@ -74,7 +76,7 @@ public class CCuentaCorriente extends CCuenta implements IFecha
   public void comisiones()
   {
     // Se aplican mensualmente por el mantenimiento de la cuenta
-    if (día() == 1)
+    if (dï¿½a() == 1)
     {
       int n = transacciones - transExentas;
       if (n > 0) reintegro(n * importePorTrans);
@@ -84,34 +86,34 @@ public class CCuentaCorriente extends CCuenta implements IFecha
   
   public double intereses()
   {
-    if (día() != 1) return 0.0;
+    if (dï¿½a() != 1) return 0.0;
       
-    // Acumular los intereses por mes sólo los días 1 de cada mes
+    // Acumular los intereses por mes sï¿½lo los dï¿½as 1 de cada mes
     double interesesProducidos = 0.0;
-    // Hasta 3000 euros al 0.5%. El resto al interés establecido.
+    // Hasta 3000 euros al 0.5%. El resto al interï¿½s establecido.
     if (estado() <= 3000)
       interesesProducidos = estado() * 0.5 / 1200.0;
       // Se dive por 100 multiplicado por 12 meses
     else
     {
       interesesProducidos = 3000 * 0.5 / 1200.0 +
-           (estado() - 3000) * obtenerTipoDeInterés() / 1200.0;
+           (estado() - 3000) * obtenerTipoDeInterï¿½s() / 1200.0;
     }
     ingreso(interesesProducidos);
     // Este ingreso no debe incrementar las transacciones
     decrementarTransacciones(); 
     
-    // Devolver el interés mensual por si fuera necesario
+    // Devolver el interï¿½s mensual por si fuera necesario
     return interesesProducidos;
   }
   
-  // Implementación de los métodos de la interfaz IFecha
-  public int día()
+  // Implementaciï¿½n de los mï¿½todos de la interfaz IFecha
+  public int dï¿½a()
   {
     GregorianCalendar fechaActual = new GregorianCalendar();
     return fechaActual.get(DIA_DEL_MES);
   }
   public int mes() { return 0; } // no se necesita
-  public int año() { return 0; } // no se necesita
+  public int aï¿½o() { return 0; } // no se necesita
 }
 //////////////////////////////////////////////////////////////////

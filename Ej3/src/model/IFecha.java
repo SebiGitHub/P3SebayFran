@@ -1,4 +1,4 @@
-package view;
+package model;
 import java.util.*;
 //////////////////////////////////////////////////////////////////
 // Interfaz IFecha: m�todos y constantes para obtener
