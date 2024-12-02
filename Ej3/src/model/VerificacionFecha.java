@@ -2,9 +2,8 @@ package model;
 import java.time.LocalDate;
 import java.util.Calendar;
 
+
 public interface VerificacionFecha {
-	
-	  
 	 int DIA_DEL_MES = Calendar.DAY_OF_MONTH;
 	    int MES = Calendar.MONTH;
 	    int ANO = Calendar.YEAR;
@@ -22,5 +21,8 @@ public interface VerificacionFecha {
 	     * @return true si se cumple un año, false en caso contrario.
 	     */
 	    boolean seCumpleAno();
-	}
+	   
+   boolean hanPasadoTiempo(int meses, int anios);
+	
 
+}
