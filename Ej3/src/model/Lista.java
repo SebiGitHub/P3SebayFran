@@ -1,5 +1,7 @@
 package model;
 
+import controller.Nodo;
+
 public class Lista<T> {
 	private Nodo<T> cabeza;
 	private Nodo<T> cola;

@@ -1,29 +1,37 @@
 package model;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Cuenta_Corriente extends Cuenta {
-	
-	private Double comision_Mantenimiento;
-	private String tipoComision;
-	public Cuenta_Corriente(Integer numero, String titular, Double saldo, Double saldoMinimo, LocalDate fechaApertura,
-			Double comision_Mantenimiento, String tipoComision) {
-		super(numero, titular, saldo, saldoMinimo, fechaApertura);
-		this.comision_Mantenimiento = comision_Mantenimiento;
-		this.tipoComision = tipoComision;
-	}
-	public Double getComision_Mantenimiento() {
-		return comision_Mantenimiento;
-	}
-	public void setComision_Mantenimiento(Double comision_Mantenimiento) {
-		this.comision_Mantenimiento = comision_Mantenimiento;
-	}
-	public String getTipoComision() {
-		return tipoComision;
-	}
-	public void setTipoComision(String tipoComision) {
-		this.tipoComision = tipoComision;
-	}
-	
+    private static final long serialVersionUID = 1L; // Añadir un identificador de versión para la serialización
+    private double comisionMantenimiento;
+    private String tipoComision;
 
+    public Cuenta_Corriente(int numero, String titular, double saldo, double saldoMinimo, 
+                           double comisionMantenimiento, String tipoComision, Date fechaApertura) {
+        super(numero, titular, saldo, saldoMinimo, fechaApertura);
+        this.comisionMantenimiento = comisionMantenimiento;
+        this.tipoComision = tipoComision;
+    }
+
+    public double getComisionMantenimiento() {
+        return comisionMantenimiento;
+    }
+
+    public void setComisionMantenimiento(double comisionMantenimiento) {
+        this.comisionMantenimiento = comisionMantenimiento;
+    }
+
+    public String getTipoComision() {
+        return tipoComision;
+    }
+
+    public void setTipoComision(String tipoComision) {
+        this.tipoComision = tipoComision;
+    }
+
+    @Override
+    public void calcularOperacion() throws SaldoInferiorException {
+        setSaldo(getSaldo() - comisionMantenimiento);
+    }
 }
