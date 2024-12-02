@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class CuentaCorriente extends Cuenta {
     private static final long serialVersionUID = 1L; // Añadir un identificador de versión para la serialización
-    private double comisionMantenimiento;
+    private static double comisionMantenimiento;
     private String tipoComision;
 
     public CuentaCorriente(int numero, String titular, double saldo, double saldoMinimo, 
@@ -14,7 +14,7 @@ public class CuentaCorriente extends Cuenta {
         this.tipoComision = tipoComision;
     }
 
-    public double getComisionMantenimiento() {
+    public static double getComisionMantenimiento() {
         return comisionMantenimiento;
     }
 
@@ -34,4 +34,19 @@ public class CuentaCorriente extends Cuenta {
     public void calcularOperacion() throws SaldoInferiorException {
         setSaldo(getSaldo() - comisionMantenimiento);
     }
+    
+    @Override
+    public String toString() {
+        return String.format(
+            "Cuenta Corriente [Número: %d, Titular: %s, Saldo: %.2f, Saldo Mínimo: %.2f, Fecha de Apertura: %s, Comisión Mantenimiento: %.2f, Tipo Comisión: %s]",
+            getNumero(),
+            getTitular(),
+            getSaldo(),
+            getSaldoMinimo(),
+            getFechaApertura(),
+            comisionMantenimiento,
+            tipoComision
+        );
+    }
+
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class CuentaAhorro extends Cuenta {
     private static final long serialVersionUID = 1L; // Añadir un identificador de versión para la serialización
-    private double interesAnual;
+    private static double interesAnual;
     private String beneficioAdicional;
 
     public CuentaAhorro(int numero, String titular, double saldo, double saldoMinimo, 
@@ -14,7 +14,7 @@ public class CuentaAhorro extends Cuenta {
         this.beneficioAdicional = beneficioAdicional;
     }
 
-    public double getInteresAnual() {
+    public static double getInteresAnual() {
         return interesAnual;
     }
 
@@ -35,4 +35,19 @@ public class CuentaAhorro extends Cuenta {
         double incremento = getSaldo() * (interesAnual / 100);
         setSaldo(getSaldo() + incremento);
     }
+    
+    @Override
+    public String toString() {
+        return String.format(
+            "Cuenta Ahorro [Número: %d, Titular: %s, Saldo: %.2f, Saldo Mínimo: %.2f, Fecha de Apertura: %s, Interés Anual: %.2f%%, Beneficio Adicional: %s]",
+            getNumero(),
+            getTitular(),
+            getSaldo(),
+            getSaldoMinimo(),
+            getFechaApertura(),
+            interesAnual,
+            beneficioAdicional
+        );
+    }
+
 }

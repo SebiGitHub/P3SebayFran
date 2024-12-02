@@ -68,11 +68,9 @@ public class CtrlLista {
     }
 
     // Obtener datos para mostrar en una lista
-    public String[] obtenerDatosLista() {
-        List<String> datos = new ArrayList<>();
-        for (Cuenta cuenta : lista.obtenerTodos()) {
-            datos.add(cuenta.toString());
-        }
-        return datos.toArray(new String[0]);
+ // Obtener una lista de cuentas directamente
+    public List<Cuenta> obtenerDatosLista() {
+        return lista.obtenerTodos(); // lista es una estructura que contiene las cuentas
     }
+
 }

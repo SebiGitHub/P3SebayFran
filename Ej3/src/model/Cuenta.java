@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public abstract class Cuenta implements Serializable {
@@ -19,6 +20,50 @@ public abstract class Cuenta implements Serializable {
         this.saldoMinimo = saldoMinimo;
         this.fechaApertura = fechaApertura;
     }
+    
+    // Método que determina si ha pasado un mes o un año desde la última operación
+    public boolean isPeriodoCumplido() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        
+        Calendar calUltimaOperacion = Calendar.getInstance();
+        calUltimaOperacion.setTime(fechaApertura);
+        
+        // Verificamos si ha pasado un mes
+        boolean mesCumplido = (cal.get(Calendar.MONTH) != calUltimaOperacion.get(Calendar.MONTH));
+        
+        // Verificamos si ha pasado un año
+        boolean anoCumplido = (cal.get(Calendar.YEAR) != calUltimaOperacion.get(Calendar.YEAR));
+        
+        return mesCumplido || anoCumplido;
+    }
+
+    // Método para calcular el saldo
+    public boolean calcularSaldo() throws Exception {
+        if (!isPeriodoCumplido()) {
+            return false; // No se cumple el periodo para el cálculo
+        }
+
+        // Aquí implementamos el cálculo dependiendo del tipo de cuenta
+        // Si es una cuenta de ahorro, aplicamos el interés anual
+        // Si es una cuenta corriente, aplicamos la comisión mensual
+        
+        if (this instanceof CuentaAhorro) {
+            saldo += saldo * CuentaAhorro.getInteresAnual() / 100; // Se incrementa el saldo según el interés anual
+        } else if (this instanceof CuentaCorriente) {
+            saldo -= CuentaCorriente.getComisionMantenimiento(); // Se decrementa el saldo por la comisión mensual
+        }
+
+        // Verificamos que el saldo no sea menor al saldo mínimo
+        if (saldo < saldoMinimo) {
+            throw new Exception("El saldo es inferior al saldo mínimo.");
+        }
+
+        // Actualizamos la fecha de la última operación
+        fechaApertura = new Date(); // Se actualiza la fecha a la actual
+
+        return true; // El cálculo fue exitoso
+    }
 
     // Getters y Setters
     public int getNumero() {
@@ -26,7 +71,12 @@ public abstract class Cuenta implements Serializable {
     }
 
     public void setNumero(int numero) {
-        this.numero = numero;
+    	if(numero < 1001) {
+    		this.numero = numero;
+    	}else {
+    		System.out.println("Maximo alcanzado");
+    	}
+        
     }
 
     public String getTitular() {
@@ -66,9 +116,4 @@ public abstract class Cuenta implements Serializable {
 
     public abstract void calcularOperacion() throws SaldoInferiorException;
     
-    public void validarSaldo() throws SaldoInferiorException {
-        if (saldo < saldoMinimo) {
-            throw new SaldoInferiorException("El saldo no puede ser inferior al saldo mínimo.");
-        }
-    }
 }

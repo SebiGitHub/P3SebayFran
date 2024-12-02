@@ -1,15 +1,9 @@
 package view;
 
 import controller.CtrlLista;
-import model.Cuenta;
-import model.CuentaAhorro;
-import model.CuentaCorriente;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 
 public class MenuBarPrincipal {
     private JFrame frame;
@@ -18,8 +12,12 @@ public class MenuBarPrincipal {
     private PanelAgregarCC panelAgregarCC;
     private PanelAgregarCA panelAgregarCA;
     private PanelVisualizarTodo panelVisualizarTodo;
+    private PanelVisualizarIndividual panelVisualizarIndividual; // Nuevo panel
     private CtrlLista ctrlLista; // Controlador de la lista
 
+    /**
+     * @wbp.parser.entryPoint
+     */
     public MenuBarPrincipal() {
         // Configuración del frame principal
         frame = new JFrame("Gestión de Cuentas");
@@ -35,12 +33,14 @@ public class MenuBarPrincipal {
         panelAgregarCC = new PanelAgregarCC(ctrlLista);
         panelAgregarCA = new PanelAgregarCA(ctrlLista);
         panelVisualizarTodo = new PanelVisualizarTodo();
+        panelVisualizarIndividual = new PanelVisualizarIndividual(ctrlLista); // Instancia del nuevo panel
 
         // Agregar los paneles al mainPanel
         mainPanel.add(panelPrincipal, "MenuPrincipal");
         mainPanel.add(panelAgregarCC, "AgregarCuentaCorriente");
         mainPanel.add(panelAgregarCA, "AgregarCuentaAhorro");
         mainPanel.add(panelVisualizarTodo, "VisualizarTodo");
+        mainPanel.add(panelVisualizarIndividual, "VisualizarIndividual"); // Agregar el nuevo panel
 
         // Crear la barra de menú
         JMenuBar menuBar = new JMenuBar();
@@ -50,12 +50,14 @@ public class MenuBarPrincipal {
         JMenuItem agregarCuentaCCItem = new JMenuItem("Agregar Cuenta Corriente");
         JMenuItem agregarCuentaCAItem = new JMenuItem("Agregar Cuenta Ahorro");
         JMenuItem visualizarTodoItem = new JMenuItem("Visualizar Todo");
+        JMenuItem visualizarIndividualItem = new JMenuItem("Visualizar Individualmente"); // Nueva opción
 
         // Añadir opciones a la barra de menú
         menuBar.add(menuPrincipalItem);
         menuBar.add(agregarCuentaCCItem);
         menuBar.add(agregarCuentaCAItem);
         menuBar.add(visualizarTodoItem);
+        menuBar.add(visualizarIndividualItem); // Añadir la nueva opción
 
         // Listeners para cambiar de panel
         menuPrincipalItem.addActionListener(e -> switchPanel("MenuPrincipal"));
@@ -65,6 +67,11 @@ public class MenuBarPrincipal {
             // Actualizar lista antes de mostrar el panel
             panelVisualizarTodo.actualizarLista(ctrlLista.obtenerDatosLista());
             switchPanel("VisualizarTodo");
+        });
+        visualizarIndividualItem.addActionListener(e -> {
+            // Actualizar datos disponibles en el panel individual
+            panelVisualizarIndividual.actualizarOpciones(ctrlLista.obtenerDatosLista());
+            switchPanel("VisualizarIndividual");
         });
 
         // Conectar botones del panel principal con el controlador

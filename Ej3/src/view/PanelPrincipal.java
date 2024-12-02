@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PanelPrincipal extends JPanel {
     private JButton btnCargarArchivo;
@@ -10,12 +11,20 @@ public class PanelPrincipal extends JPanel {
     private JButton btnCargarPrueba;
 
     public PanelPrincipal() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         btnCargarArchivo = new JButton("Cargar desde archivo");
+        btnCargarArchivo.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        btnCargarArchivo.setBounds(20, 238, 131, 21);
         btnGuardarArchivo = new JButton("Guardar en archivo");
+        btnGuardarArchivo.setBounds(20, 269, 119, 21);
         btnVaciarLista = new JButton("Vaciar lista");
+        btnVaciarLista.setBounds(206, 269, 83, 21);
         btnCargarPrueba = new JButton("Cargar datos de prueba");
+        btnCargarPrueba.setBounds(299, 269, 141, 21);
+        setLayout(null);
 
         add(btnCargarArchivo);
         add(btnGuardarArchivo);
