@@ -2495,3 +2495,6 @@ java.lang.IllegalStateException: operation plan must be resolved
 !MESSAGE No repository found containing: osgi.bundle,org.apache.lucene.analysis-common,9.12.0.v20240929-0900
 !SUBENTRY 1 org.eclipse.equinox.p2.artifact.repository 4 0 2024-12-02 17:36:19.165
 !MESSAGE No repository found containing: osgi.bundle,org.apache.lucene.core,9.12.0.v20240929-0900
+
+!ENTRY org.eclipse.wb.core.java 2 0 2024-12-02 17:38:41.830
+!MESSAGE The file '/wbp-meta/javax/swing/Box.wbp-factory.xml' should use 'http://www.eclipse.org/wb/WBPComponent' instead of the default namespace.

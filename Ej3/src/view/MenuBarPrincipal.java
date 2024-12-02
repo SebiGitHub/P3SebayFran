@@ -1,82 +1,94 @@
 package view;
 
-import java.awt.CardLayout;
+import controller.CtrlLista;
+import model.Cuenta;
+import model.CuentaAhorro;
+import model.CuentaCorriente;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class MenuBarPrincipal {
     private JFrame frame;
     private JPanel mainPanel;
-    private JPanel menuPrincipalPanel;
-    private JPanel agregarCuentaPanel;
-    private JPanel visualizarPanel;
+    private PanelPrincipal panelPrincipal;
+    private PanelAgregarCC panelAgregarCC;
+    private PanelAgregarCA panelAgregarCA;
+    private PanelVisualizarTodo panelVisualizarTodo;
+    private CtrlLista ctrlLista; // Controlador de la lista
 
     public MenuBarPrincipal() {
-        frame = new JFrame("Barra de Menú Principal");
+        // Configuración del frame principal
+        frame = new JFrame("Gestión de Cuentas");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(800, 600);
 
-        // Crear los paneles
+        // Controlador para la lista
+        ctrlLista = new CtrlLista();
+
+        // Crear los paneles y el mainPanel
         mainPanel = new JPanel(new CardLayout());
-        menuPrincipalPanel = new JPanel();
-        agregarCuentaPanel = new JPanel();
-        visualizarPanel = new JPanel();
+        panelPrincipal = new PanelPrincipal();
+        panelAgregarCC = new PanelAgregarCC(ctrlLista);
+        panelAgregarCA = new PanelAgregarCA(ctrlLista);
+        panelVisualizarTodo = new PanelVisualizarTodo();
 
-        // Configuración de cada panel
-        menuPrincipalPanel.add(new JLabel("Bienvenido al Menú Principal"));
-        agregarCuentaPanel.add(new JLabel("Panel para Agregar Cuenta"));
-        visualizarPanel.add(new JLabel("Panel para Visualizar"));
+        // Agregar los paneles al mainPanel
+        mainPanel.add(panelPrincipal, "MenuPrincipal");
+        mainPanel.add(panelAgregarCC, "AgregarCuentaCorriente");
+        mainPanel.add(panelAgregarCA, "AgregarCuentaAhorro");
+        mainPanel.add(panelVisualizarTodo, "VisualizarTodo");
 
-        // Añadir los paneles al mainPanel
-        mainPanel.add(menuPrincipalPanel, "MenuPrincipal");
-        mainPanel.add(agregarCuentaPanel, "AgregarCuenta");
-        mainPanel.add(visualizarPanel, "Visualizar");
-
-        // Crear barra de menú
+        // Crear la barra de menú
         JMenuBar menuBar = new JMenuBar();
 
-        // Crear menú
-        JMenu menu = new JMenu("Opciones");
-
-        // Crear items del menú
+        // Opciones del menú
         JMenuItem menuPrincipalItem = new JMenuItem("Menú Principal");
-        JMenuItem agregarCuentaItem = new JMenuItem("Agregar Cuenta");
-        JMenuItem visualizarItem = new JMenuItem("Visualizar");
+        JMenuItem agregarCuentaCCItem = new JMenuItem("Agregar Cuenta Corriente");
+        JMenuItem agregarCuentaCAItem = new JMenuItem("Agregar Cuenta Ahorro");
+        JMenuItem visualizarTodoItem = new JMenuItem("Visualizar Todo");
 
-        // Agregar ActionListeners para cambiar de panel
-        menuPrincipalItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switchPanel("MenuPrincipal");
+        // Añadir opciones a la barra de menú
+        menuBar.add(menuPrincipalItem);
+        menuBar.add(agregarCuentaCCItem);
+        menuBar.add(agregarCuentaCAItem);
+        menuBar.add(visualizarTodoItem);
+
+        // Listeners para cambiar de panel
+        menuPrincipalItem.addActionListener(e -> switchPanel("MenuPrincipal"));
+        agregarCuentaCCItem.addActionListener(e -> switchPanel("AgregarCuentaCorriente"));
+        agregarCuentaCAItem.addActionListener(e -> switchPanel("AgregarCuentaAhorro"));
+        visualizarTodoItem.addActionListener(e -> {
+            // Actualizar lista antes de mostrar el panel
+            panelVisualizarTodo.actualizarLista(ctrlLista.obtenerDatosLista());
+            switchPanel("VisualizarTodo");
+        });
+
+        // Conectar botones del panel principal con el controlador
+        panelPrincipal.addCargarArchivoListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                ctrlLista.cargarDesdeArchivo(fileChooser.getSelectedFile());
             }
         });
 
-        agregarCuentaItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switchPanel("AgregarCuenta");
+        panelPrincipal.addGuardarArchivoListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                ctrlLista.guardarEnArchivo(fileChooser.getSelectedFile());
             }
         });
 
-        visualizarItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switchPanel("Visualizar");
-            }
-        });
+        panelPrincipal.addVaciarListaListener(e -> ctrlLista.vaciarLista());
 
-        // Agregar items al menú
-        menu.add(menuPrincipalItem);
-        menu.add(agregarCuentaItem);
-        menu.add(visualizarItem);
+        panelPrincipal.addCargarPruebaListener(e -> ctrlLista.cargarPruebas());
 
-        // Agregar menú a la barra de menú
-        menuBar.add(menu);
-
-        // Configurar el frame
+        // Agregar los componentes al frame
         frame.setJMenuBar(menuBar);
-        frame.add(mainPanel);
+        frame.getContentPane().add(mainPanel);
         frame.setVisible(true);
     }
 
@@ -84,5 +96,9 @@ public class MenuBarPrincipal {
     private void switchPanel(String panelName) {
         CardLayout cl = (CardLayout) (mainPanel.getLayout());
         cl.show(mainPanel, panelName);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MenuBarPrincipal::new);
     }
 }
