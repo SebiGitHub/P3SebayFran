@@ -21,7 +21,11 @@ import model.CuentaCorriente;
 import model.SaldoInferiorException;
 
 public class PanelVisualizarIndividual extends JPanel {
-    private JComboBox<String> comboCuentas;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JComboBox<String> comboCuentas;
     private JPanel panelDetalles;
     private CtrlLista ctrlLista;
 
