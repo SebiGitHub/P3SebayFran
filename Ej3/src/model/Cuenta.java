@@ -11,9 +11,10 @@ public class Cuenta implements VerificacionFecha {
 	private Double saldo;
 	private Double SaldoMinimo;
 	private LocalDate fechaApertura;
-	public Cuenta() {
-		
-	}
+	
+	
+	public Cuenta() {}
+
 	public Cuenta(Integer numero, String titular, Double saldo, Double saldoMinimo, LocalDate fechaApertura) {
 		if (numero < 1 || numero > 1000) throw new IllegalArgumentException("Número fuera de rango.");
 		else this.numero = numero;
@@ -25,6 +26,9 @@ public class Cuenta implements VerificacionFecha {
         this.titular = titular;
         this.SaldoMinimo = saldoMinimo;
 	}
+	
+	
+	
 	public Integer getNumero() {
 		return numero;
 	}
@@ -42,8 +46,8 @@ public class Cuenta implements VerificacionFecha {
 	}
 
 	
-	public void setSaldo(Double saldo)throws SaldoInsuficienteException {
-		if(saldo<SaldoMinimo)throw new SaldoInsuficienteException("Saldo no puede ser inferior al saldo mínimo.");
+	public void setSaldo(Double saldo)throws FechaInvalidaException {
+		if(saldo<SaldoMinimo)throw new FechaInvalidaException("Saldo no puede ser inferior al saldo mínimo.");
 		else this.saldo = saldo;
 	}
 	public Double getSaldoMinimo() {
@@ -58,6 +62,8 @@ public class Cuenta implements VerificacionFecha {
 	public void setFechaApertura(LocalDate fechaApertura) {
 		this.fechaApertura = fechaApertura;
 	}
+	
+	
 	  @Override
 	    public boolean seCumpleMes() {
 	        LocalDate fechaActual = LocalDate.now();

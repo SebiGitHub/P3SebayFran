@@ -1,4 +1,4 @@
-package controller;
+package model;
 
 public class Lista<T> {
     private Nodo<T> cabeza;
