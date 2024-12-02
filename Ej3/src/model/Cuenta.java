@@ -1,7 +1,8 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
+
 
 public class Cuenta implements VerificacionFecha {
 	private Integer numero;
@@ -10,9 +11,12 @@ public class Cuenta implements VerificacionFecha {
 	private Double SaldoMinimo;
 	private LocalDate fechaApertura;
 	public Cuenta() {
+		
 	}
 	public Cuenta(Integer numero, String titular, Double saldo, Double saldoMinimo, LocalDate fechaApertura) {
-		this.numero = numero;
+		if (numero < 1 || numero > 1000) throw new IllegalArgumentException("Número fuera de rango.");
+        if (saldo < saldoMinimo) throw new IllegalArgumentException("Saldo inferior al saldo mínimo.");
+        if (fechaApertura.isAfter(LocalDate.now())) throw new IllegalArgumentException("La fecha no puede ser futura.");		this.numero = numero;
 		this.titular = titular;
 		this.saldo = saldo;
 		SaldoMinimo = saldoMinimo;
@@ -33,7 +37,8 @@ public class Cuenta implements VerificacionFecha {
 	public Double getSaldo() {
 		return saldo;
 	}
-	public void setSaldo(Double saldo) {
+	public void setSaldo(Double saldo)throws SaldoInsuficienteException {
+		if(saldo<SaldoMinimo)throw new SaldoInsuficienteException("Saldo no puede ser inferior al saldo mínimo.");
 		this.saldo = saldo;
 	}
 	public Double getSaldoMinimo() {
@@ -48,17 +53,21 @@ public class Cuenta implements VerificacionFecha {
 	public void setFechaApertura(LocalDate fechaApertura) {
 		this.fechaApertura = fechaApertura;
 	}
-	@Override
-	public boolean VerificacionFecha(int meses, int anios) {
-		   if (fechaApertura == null) {
-	            throw new IllegalStateException("La fecha de apertura no está definida");
-	        }
+	  @Override
+	    public boolean seCumpleMes() {
+	        LocalDate fechaActual = LocalDate.now();
+	        // Verificar si exactamente ha transcurrido un mes
+	        return ChronoUnit.MONTHS.between(fechaApertura, fechaActual) >= 1
+	                && fechaActual.getDayOfMonth() >= fechaApertura.getDayOfMonth();
+	    }
 
-	        LocalDate hoy = LocalDate.now();
-	        Period diferencia = Period.between(fechaApertura, hoy);
-
-	        return diferencia.getYears() >= anios || diferencia.getMonths() + diferencia.getYears() * 12 >= meses;
-	}
+	    @Override
+	    public boolean seCumpleAno() {
+	        LocalDate fechaActual = LocalDate.now();
+	        // Verificar si exactamente ha transcurrido un año
+	        return ChronoUnit.YEARS.between(fechaApertura, fechaActual) >= 1
+	                && fechaActual.getDayOfYear() >= fechaApertura.getDayOfYear();
+	    }
 	
 
 }
