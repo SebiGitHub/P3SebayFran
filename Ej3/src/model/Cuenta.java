@@ -49,7 +49,7 @@ public class Cuenta implements VerificacionFecha {
 		this.fechaApertura = fechaApertura;
 	}
 	@Override
-	public boolean hanPasadoTiempo(int meses, int anios) {
+	public boolean VerificacionFecha(int meses, int anios) {
 		   if (fechaApertura == null) {
 	            throw new IllegalStateException("La fecha de apertura no está definida");
 	        }
