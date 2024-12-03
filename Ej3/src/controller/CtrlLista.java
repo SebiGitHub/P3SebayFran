@@ -29,10 +29,17 @@ public class CtrlLista {
 
     // Cargar datos desde un archivo
     public void cargarDesdeArchivo(File archivo) {
-        if (archivo.exists()) {
+    	if (archivo.exists()) {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
-                lista = (Lista<Cuenta>) ois.readObject();
-                JOptionPane.showMessageDialog(null, "Datos cargados correctamente.");
+                Object obj = ois.readObject();
+                System.out.println("Tipo de objeto deserializado: " + obj.getClass().getName());
+
+                if (obj instanceof Lista) {
+                    lista = (Lista<Cuenta>) obj;
+                    JOptionPane.showMessageDialog(null, "Datos cargados correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "El archivo no contiene una lista válida.");
+                }
             } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(null, "Error al cargar los datos: " + e.getMessage());
             }

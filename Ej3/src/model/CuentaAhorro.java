@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class CuentaAhorro extends Cuenta {
+public class CuentaAhorro extends Cuenta implements Serializable {
     private static final long serialVersionUID = 1L; // Añadir un identificador de versión para la serialización
     private static double interesAnual;
     private String beneficioAdicional;
