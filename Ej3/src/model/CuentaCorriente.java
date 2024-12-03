@@ -15,6 +15,7 @@ public class CuentaCorriente extends Cuenta implements Serializable{
         this.tipoComision = tipoComision;
     }
 
+    // Getters y Setters
     public double getComisionMantenimiento() {
         return comisionMantenimiento;
     }

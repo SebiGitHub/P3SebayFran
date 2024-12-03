@@ -21,11 +21,8 @@ import model.CuentaCorriente;
 import model.SaldoInferiorException;
 
 public class PanelVisualizarIndividual extends JPanel {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JComboBox<String> comboCuentas;
+    private static final long serialVersionUID = 1L;
+    private JComboBox<String> comboCuentas;
     private JPanel panelDetalles;
     private CtrlLista ctrlLista;
 
@@ -95,19 +92,19 @@ public class PanelVisualizarIndividual extends JPanel {
                 // Crear y añadir las etiquetas y los campos de texto con los detalles de la cuenta
                 panelDetalles.add(new JLabel("Número:"));
                 panelDetalles.add(new JTextField(String.valueOf(cuentaSeleccionada.getNumero()), 15));
-                
+
                 panelDetalles.add(new JLabel("Titular:"));
                 panelDetalles.add(new JTextField(cuentaSeleccionada.getTitular(), 15));
-                
+
                 panelDetalles.add(new JLabel("Saldo:"));
                 panelDetalles.add(new JTextField(String.format("%.2f", cuentaSeleccionada.getSaldo()), 15));
-                
+
                 panelDetalles.add(new JLabel("Saldo Mínimo:"));
                 panelDetalles.add(new JTextField(String.format("%.2f", cuentaSeleccionada.getSaldoMinimo()), 15));
-                
+
                 panelDetalles.add(new JLabel("Fecha de Apertura:"));
                 panelDetalles.add(new JTextField(cuentaSeleccionada.getFechaApertura().toString(), 15));
-                
+
                 // Añadir detalles específicos de CuentaCorriente o CuentaAhorro
                 if (cuentaSeleccionada instanceof CuentaCorriente) {
                     CuentaCorriente cuentaCorriente = (CuentaCorriente) cuentaSeleccionada;

@@ -17,6 +17,8 @@ import model.CuentaAhorro;
 import model.CuentaCorriente;
 import model.Titular;
 
+
+	//Metodo para generar un archivo acorde a nuestro programa.
 public class GenerarCuentas {
 
     public static void main(String[] args) {

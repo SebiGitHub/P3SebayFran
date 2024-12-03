@@ -15,7 +15,7 @@ public class CuentaAhorro extends Cuenta implements Serializable {
         this.beneficioAdicional = beneficioAdicional;
     }
 
-
+    // Getters y Setters
 	public double getInteresAnual() {
         return interesAnual;
     }

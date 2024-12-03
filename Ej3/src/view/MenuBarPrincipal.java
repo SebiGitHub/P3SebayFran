@@ -1,6 +1,8 @@
 package view;
 
 import controller.CtrlLista;
+import model.FechaInvalidaException;
+import model.SaldoInferiorException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,10 +16,9 @@ public class MenuBarPrincipal {
     private PanelVisualizarTodo panelVisualizarTodo;
     private PanelVisualizarIndividual panelVisualizarIndividual; // Nuevo panel
     private CtrlLista ctrlLista; // Controlador de la lista
+    private JMenuBar menuBar;
 
-    /**
-     * @wbp.parser.entryPoint
-     */
+    
     public MenuBarPrincipal() {
         // Configuración del frame principal
         frame = new JFrame("Gestión de Cuentas");
@@ -30,34 +31,49 @@ public class MenuBarPrincipal {
         // Crear los paneles y el mainPanel
         mainPanel = new JPanel(new CardLayout());
         panelPrincipal = new PanelPrincipal();
-        panelAgregarCC = new PanelAgregarCC(ctrlLista);
-        panelAgregarCA = new PanelAgregarCA(ctrlLista);
+
+        try {
+            panelAgregarCC = new PanelAgregarCC(ctrlLista);
+			panelAgregarCA = new PanelAgregarCA(ctrlLista);
+		} catch (FechaInvalidaException | SaldoInferiorException e) {
+			e.printStackTrace();
+		}
         panelVisualizarTodo = new PanelVisualizarTodo();
-        panelVisualizarIndividual = new PanelVisualizarIndividual(ctrlLista); // Instancia del nuevo panel
+        panelVisualizarIndividual = new PanelVisualizarIndividual(ctrlLista);
 
         // Agregar los paneles al mainPanel
         mainPanel.add(panelPrincipal, "MenuPrincipal");
         mainPanel.add(panelAgregarCC, "AgregarCuentaCorriente");
         mainPanel.add(panelAgregarCA, "AgregarCuentaAhorro");
         mainPanel.add(panelVisualizarTodo, "VisualizarTodo");
-        mainPanel.add(panelVisualizarIndividual, "VisualizarIndividual"); // Agregar el nuevo panel
+        mainPanel.add(panelVisualizarIndividual, "VisualizarIndividual");
 
         // Crear la barra de menú
-        JMenuBar menuBar = new JMenuBar();
+        menuBar = new JMenuBar();
 
-        // Opciones del menú
-        JMenuItem menuPrincipalItem = new JMenuItem("Menú Principal");
-        JMenuItem agregarCuentaCCItem = new JMenuItem("Agregar Cuenta Corriente");
-        JMenuItem agregarCuentaCAItem = new JMenuItem("Agregar Cuenta Ahorro");
-        JMenuItem visualizarTodoItem = new JMenuItem("Visualizar Todo");
-        JMenuItem visualizarIndividualItem = new JMenuItem("Visualizar Individualmente"); // Nueva opción
+        // Crear los menús "Menu Principal", "Agregar" y "Visualizar"
+        JMenu menuPrincipal = new JMenu("Menú Principal");
+        JMenu agregarMenu = new JMenu("Agregar");
+        JMenu visualizarMenu = new JMenu("Visualizar");
 
-        // Añadir opciones a la barra de menú
-        menuBar.add(menuPrincipalItem);
-        menuBar.add(agregarCuentaCCItem);
-        menuBar.add(agregarCuentaCAItem);
-        menuBar.add(visualizarTodoItem);
-        menuBar.add(visualizarIndividualItem); // Añadir la nueva opción
+        // Crear los ítems del menú
+        JMenuItem menuPrincipalItem = new JMenuItem("Menú");
+        JMenuItem agregarCuentaCCItem = new JMenuItem("Cuenta Corriente");
+        JMenuItem agregarCuentaCAItem = new JMenuItem("Cuenta Ahorro");
+        JMenuItem visualizarTodoItem = new JMenuItem("Todo");
+        JMenuItem visualizarIndividualItem = new JMenuItem("Individualmente");
+
+        // Añadir los ítems a los submenús correspondientes
+        menuPrincipal.add(menuPrincipalItem);
+        agregarMenu.add(agregarCuentaCCItem);
+        agregarMenu.add(agregarCuentaCAItem);
+        visualizarMenu.add(visualizarTodoItem);
+        visualizarMenu.add(visualizarIndividualItem);
+
+        // Añadir los menús a la barra de menú
+        menuBar.add(menuPrincipal);
+        menuBar.add(agregarMenu);
+        menuBar.add(visualizarMenu);
 
         // Listeners para cambiar de panel
         menuPrincipalItem.addActionListener(e -> switchPanel("MenuPrincipal"));
@@ -103,9 +119,5 @@ public class MenuBarPrincipal {
     private void switchPanel(String panelName) {
         CardLayout cl = (CardLayout) (mainPanel.getLayout());
         cl.show(mainPanel, panelName);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MenuBarPrincipal::new);
     }
 }

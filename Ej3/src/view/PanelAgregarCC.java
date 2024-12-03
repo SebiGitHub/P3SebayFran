@@ -16,10 +16,12 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
+import controller.CtrlFechas;
 import controller.CtrlLista;
 import model.Comision;
-import model.CuentaAhorro;
 import model.CuentaCorriente;
+import model.FechaInvalidaException;
+import model.SaldoInferiorException;
 
 public class PanelAgregarCC extends JPanel {
     private JTextField txtNumero;
@@ -28,10 +30,10 @@ public class PanelAgregarCC extends JPanel {
     private JTextField txtSaldoMinimo;
     private JSpinner spinnerFecha;
     private JTextField txtComisionMantenimiento;
-    private JComboBox<Comision> comboTipoComision; // Cambiado de JTextField a JComboBox
+    private JComboBox<Comision> comboTipoComision;
     private JButton btnAgregar;
 
-    public PanelAgregarCC(CtrlLista ctrlLista) {
+    public PanelAgregarCC(CtrlLista ctrlLista) throws FechaInvalidaException{
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10); // Margen entre componentes
@@ -49,7 +51,7 @@ public class PanelAgregarCC extends JPanel {
         gbc.gridx = 1;
         txtNumero = new JTextField();
         txtNumero.setFont(campoFont);
-        txtNumero.setPreferredSize(new Dimension(200, 30)); // Tamaño más grande
+        txtNumero.setPreferredSize(new Dimension(200, 30));
         add(txtNumero, gbc);
 
         // Campo Titular
@@ -125,7 +127,7 @@ public class PanelAgregarCC extends JPanel {
         gbc.gridy = 7;
         btnAgregar = new JButton("Agregar Cuenta");
         btnAgregar.setFont(new Font("Arial", Font.BOLD, 16));
-        btnAgregar.setPreferredSize(new Dimension(200, 40)); // Tamaño más grande
+        btnAgregar.setPreferredSize(new Dimension(200, 40));
         add(btnAgregar, gbc);
 
         // Acción al presionar el botón Agregar
@@ -138,11 +140,22 @@ public class PanelAgregarCC extends JPanel {
                 double saldoMinimo = Double.parseDouble(txtSaldoMinimo.getText());
                 Date fechaApertura = (Date) spinnerFecha.getValue();
 
-                // Crear la cuenta de ahorro (o puedes usar otra clase según sea necesario)
-                double comisionMantenimiento = Double.parseDouble(txtComisionMantenimiento.getText());
-                Comision tipoComision = (Comision) comboTipoComision.getSelectedItem(); // Obtener el beneficio seleccionado
+                // Comprobar si la fecha es futura utilizando CtrlFechas
+                if (CtrlFechas.esFechaFutura(fechaApertura)) {
+                    JOptionPane.showMessageDialog(this, "La fecha de apertura no puede ser futura.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return; // Salir del método si la fecha es futura
+                }
 
-                // Crear la cuenta de ahorro (o de otro tipo si es necesario)
+                // Verificar si el saldo es menor que el saldo mínimo
+                if (saldo < saldoMinimo) {
+                    throw new SaldoInferiorException("El saldo es inferior al saldo mínimo requerido. El saldo mínimo es: " + saldoMinimo);
+                }
+
+                // Crear la cuenta corriente (o puedes usar otra clase según sea necesario)
+                double comisionMantenimiento = Double.parseDouble(txtComisionMantenimiento.getText());
+                Comision tipoComision = (Comision) comboTipoComision.getSelectedItem(); // Obtener el tipo de comisión seleccionado
+
+                // Crear la cuenta corriente
                 CuentaCorriente nuevaCuenta = new CuentaCorriente(numero, titular, saldo, saldoMinimo, fechaApertura, comisionMantenimiento, tipoComision);
 
                 // Agregar la cuenta al controlador
@@ -161,8 +174,11 @@ public class PanelAgregarCC extends JPanel {
                 comboTipoComision.setSelectedIndex(0); // Reseteamos el combo box al primer valor
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SaldoInferiorException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+
     }
 
     // Método para crear etiquetas con estilo personalizado

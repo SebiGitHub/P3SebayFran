@@ -4633,3 +4633,6 @@ java.lang.IllegalStateException: Disconnected before saving. Please post stacktr
 		at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4047)
 		at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3663)
 		... 22 more
+
+!ENTRY org.eclipse.wb.core.java 2 0 2024-12-03 18:54:13.439
+!MESSAGE The file '/wbp-meta/javax/swing/Box.wbp-factory.xml' should use 'http://www.eclipse.org/wb/WBPComponent' instead of the default namespace.

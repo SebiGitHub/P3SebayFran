@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -75,10 +75,22 @@ public class CtrlLista {
     // Cargar datos de prueba
     public void cargarPruebas() {
         // Cambiar add() a agregar() para que coincida con el método definido en la clase Lista
-        lista.agregar(new CuentaAhorro(1, Titular.TITULAR_16.getNombre(), 1000, 500, new Date(),  2.4, Beneficio.BAJO));
-        lista.agregar(new CuentaAhorro(2, Titular.TITULAR_16.getNombre(), 2000, 1000, new Date(), 34.0, Beneficio.ALTO));
-        lista.agregar(new CuentaCorriente(3, Titular.TITULAR_4.getNombre(), 1500, 500, new Date(), 10, Comision.MEDIA));
-        lista.agregar(new CuentaCorriente(4, Titular.TITULAR_18.getNombre(), 3000, 2000, new Date(), 12, Comision.ALTA));
+    	
+    	Calendar calendar = Calendar.getInstance();
+
+    	// Establecer la fecha a la actual
+    	calendar.setTime(new Date());
+
+    	// Restar un año a la fecha actual
+    	calendar.add(Calendar.YEAR, -1);
+
+    	// Obtener la fecha del año pasado
+    	Date fechaAperturaPasada = calendar.getTime();
+    	
+    	lista.agregar(new CuentaAhorro(1, Titular.TITULAR_16.getNombre(), 1000, 500, fechaAperturaPasada,  2.4, Beneficio.BAJO));
+    	lista.agregar(new CuentaAhorro(2, Titular.TITULAR_16.getNombre(), 2000, 1000, fechaAperturaPasada, 34.0, Beneficio.ALTO));
+    	lista.agregar(new CuentaCorriente(3, Titular.TITULAR_4.getNombre(), 1500, 500, fechaAperturaPasada, 10, Comision.MEDIA));
+    	lista.agregar(new CuentaCorriente(4, Titular.TITULAR_18.getNombre(), 3000, 2000, fechaAperturaPasada, 12, Comision.ALTA));
         JOptionPane.showMessageDialog(null, "Datos de prueba cargados.");
     }
 
