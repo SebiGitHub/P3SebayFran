@@ -89,7 +89,7 @@ public class CtrlLista {
     }
     
     
-    //Agregar
+    //Agregar cuenta
     public void agregarCuenta(Cuenta cuenta) {
     	lista.agregar(cuenta);  // O donde estés almacenando las cuentas
     }
