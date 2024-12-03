@@ -5,17 +5,18 @@ import java.util.Date;
 
 public class CuentaAhorro extends Cuenta implements Serializable {
     private static final long serialVersionUID = 1L; // Añadir un identificador de versión para la serialización
-    private static double interesAnual;
-    private String beneficioAdicional;
+    private double interesAnual;
+    private Beneficio beneficioAdicional;
 
-    public CuentaAhorro(int numero, String titular, double saldo, double saldoMinimo, 
-                        double interesAnual, String beneficioAdicional, Date fechaApertura) {
+    public CuentaAhorro(int numero, String titular, double saldo, double saldoMinimo, Date fechaApertura,
+                        double interesAnual, Beneficio beneficioAdicional) {
         super(numero, titular, saldo, saldoMinimo, fechaApertura);
         this.interesAnual = interesAnual;
         this.beneficioAdicional = beneficioAdicional;
     }
 
-    public static double getInteresAnual() {
+
+	public double getInteresAnual() {
         return interesAnual;
     }
 
@@ -23,13 +24,14 @@ public class CuentaAhorro extends Cuenta implements Serializable {
         this.interesAnual = interesAnual;
     }
 
-    public String getBeneficioAdicional() {
+    public Beneficio getBeneficioAdicional() {
         return beneficioAdicional;
     }
 
-    public void setBeneficioAdicional(String beneficioAdicional) {
+    public void setBeneficioAdicional(Beneficio beneficioAdicional) {
         this.beneficioAdicional = beneficioAdicional;
     }
+
 
     @Override
     public void calcularOperacion() throws SaldoInferiorException {

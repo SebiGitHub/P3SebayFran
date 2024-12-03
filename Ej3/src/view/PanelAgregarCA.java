@@ -1,10 +1,24 @@
 package view;
 
-import javax.swing.*;
-import controller.CtrlLista;
-
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Date;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+
+import controller.CtrlLista;
+import model.Beneficio;
+import model.CuentaAhorro;
 
 public class PanelAgregarCA extends JPanel {
     private JTextField txtNumero;
@@ -13,7 +27,7 @@ public class PanelAgregarCA extends JPanel {
     private JTextField txtSaldoMinimo;
     private JSpinner spinnerFecha;
     private JTextField txtInteresAnual;
-    private JTextField txtBeneficioAdicional;
+    private JComboBox<Beneficio> comboBeneficioAdicional; // Cambiado de JTextField a JComboBox
     private JButton btnAgregar;
 
     public PanelAgregarCA(CtrlLista ctrlLista) {
@@ -94,16 +108,16 @@ public class PanelAgregarCA extends JPanel {
         txtInteresAnual.setPreferredSize(new Dimension(200, 30));
         add(txtInteresAnual, gbc);
 
-        // Campo Beneficio adicional
+        // Campo Beneficio adicional (ahora un JComboBox con las opciones del enum Beneficio)
         gbc.gridx = 0;
         gbc.gridy = 6;
         add(crearEtiqueta("Beneficio adicional:", etiquetaFont), gbc);
 
         gbc.gridx = 1;
-        txtBeneficioAdicional = new JTextField();
-        txtBeneficioAdicional.setFont(campoFont);
-        txtBeneficioAdicional.setPreferredSize(new Dimension(200, 30));
-        add(txtBeneficioAdicional, gbc);
+        comboBeneficioAdicional = new JComboBox<>(Beneficio.values()); // Llenamos el JComboBox con los valores del enum
+        comboBeneficioAdicional.setFont(campoFont);
+        comboBeneficioAdicional.setPreferredSize(new Dimension(200, 30));
+        add(comboBeneficioAdicional, gbc);
 
         // Botón Agregar
         gbc.gridx = 1;
@@ -112,6 +126,42 @@ public class PanelAgregarCA extends JPanel {
         btnAgregar.setFont(new Font("Arial", Font.BOLD, 16));
         btnAgregar.setPreferredSize(new Dimension(200, 40)); // Tamaño más grande
         add(btnAgregar, gbc);
+
+        // Acción al presionar el botón Agregar
+        btnAgregar.addActionListener(e -> {
+            try {
+                // Crear la cuenta según los datos ingresados
+                int numero = Integer.parseInt(txtNumero.getText());
+                String titular = txtTitular.getText();
+                double saldo = Double.parseDouble(txtSaldo.getText());
+                double saldoMinimo = Double.parseDouble(txtSaldoMinimo.getText());
+                Date fechaApertura = (Date) spinnerFecha.getValue();
+
+                // Crear la cuenta de ahorro (o puedes usar otra clase según sea necesario)
+                double interesAnual = Double.parseDouble(txtInteresAnual.getText());
+                Beneficio beneficioAdicional = (Beneficio) comboBeneficioAdicional.getSelectedItem(); // Obtener el beneficio seleccionado
+
+                // Crear la cuenta de ahorro (o de otro tipo si es necesario)
+                CuentaAhorro nuevaCuenta = new CuentaAhorro(numero, titular, saldo, saldoMinimo, fechaApertura, interesAnual, beneficioAdicional);
+
+                // Agregar la cuenta al controlador
+                ctrlLista.agregarCuenta(nuevaCuenta);
+
+                // Mostrar mensaje de éxito
+                JOptionPane.showMessageDialog(this, "Cuenta agregada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                // Limpiar los campos
+                txtNumero.setText("");
+                txtTitular.setText("");
+                txtSaldo.setText("");
+                txtSaldoMinimo.setText("");
+                spinnerFecha.setValue(new Date());
+                txtInteresAnual.setText("");
+                comboBeneficioAdicional.setSelectedIndex(0); // Reseteamos el combo box al primer valor
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     // Método para crear etiquetas con estilo personalizado
@@ -119,38 +169,5 @@ public class PanelAgregarCA extends JPanel {
         JLabel etiqueta = new JLabel(texto);
         etiqueta.setFont(font);
         return etiqueta;
-    }
-
-    // Métodos para obtener los valores de los campos
-    public int getNumero() throws NumberFormatException {
-        return Integer.parseInt(txtNumero.getText());
-    }
-
-    public String getTitular() {
-        return txtTitular.getText();
-    }
-
-    public double getSaldo() throws NumberFormatException {
-        return Double.parseDouble(txtSaldo.getText());
-    }
-
-    public double getSaldoMinimo() throws NumberFormatException {
-        return Double.parseDouble(txtSaldoMinimo.getText());
-    }
-
-    public Date getFechaApertura() {
-        return (Date) spinnerFecha.getValue();
-    }
-
-    public double getInteresAnual() throws NumberFormatException {
-        return Double.parseDouble(txtInteresAnual.getText());
-    }
-
-    public String getBeneficioAdicional() {
-        return txtBeneficioAdicional.getText();
-    }
-
-    public JButton getBtnAgregar() {
-        return btnAgregar;
     }
 }

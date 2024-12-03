@@ -1,52 +1,84 @@
 package view;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Date;
+import java.util.Random;
+
+import controller.Lista;
+import model.Beneficio;
+import model.Comision;
 import model.Cuenta;
 import model.CuentaAhorro;
 import model.CuentaCorriente;
-import java.io.*;
-import java.util.Random;
-import java.util.Date;
+import model.Titular;
 
 public class GenerarCuentas {
 
     public static void main(String[] args) {
-        // Generar el archivo de cuentas
-        generarCuentasAleatorias("cuentasPrueba.dat");
+        completarCuentas("C:/Users/Sebas/Desktop/a.dat");
     }
 
-    public static void generarCuentasAleatorias(String nombreArchivo) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(nombreArchivo))) {
-            Random rand = new Random();
-            
-            for (int i = 0; i < 1000; i++) {
-                // Generamos datos aleatorios para la cuenta
-                int numeroCuenta = rand.nextInt(1000000); // Número aleatorio de cuenta
-                String titular = "Titular_" + rand.nextInt(1000); // Titular aleatorio
-                double saldo = rand.nextDouble() * 10000; // Saldo aleatorio entre 0 y 10000
-                double saldoMinimo = rand.nextDouble() * 500; // Saldo mínimo aleatorio entre 0 y 500
-                Date fechaApertura = new Date(); // Fecha de apertura actual
+    public static void completarCuentas(String nombreArchivo) {
+        Lista<Cuenta> listaCuentas = new Lista<>();
+
+        // Leer la lista existente desde el archivo
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(nombreArchivo))) {
+            listaCuentas = (Lista<Cuenta>) in.readObject();  // Cargar lista serializada
+        } catch (EOFException e) {
+            System.out.println("Archivo vacío o fin de archivo alcanzado.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Obtener cuentas existentes y calcular cuántas faltan
+        int cuentasExistentes = listaCuentas.obtenerTodos().size(); // Tamaño actual de la lista
+        int totalCuentas = 100;  // Cambiado a 10 cuentas en total
+        int cuentasFaltantes = totalCuentas - cuentasExistentes;
+
+        // Generar cuentas adicionales si son necesarias
+        if (cuentasFaltantes <= 0) {
+            System.out.println("No se necesitan más cuentas. Total actual: " + cuentasExistentes);
+            return;
+        }
+
+        Random rand = new Random();
+        
+        int cont = 0;
+
+        for (int i = 0; i < cuentasFaltantes; i++) {
+            int numeroCuenta = ++cont;
+            String titular = Titular.values()[rand.nextInt(Titular.values().length)].getNombre();
+            double saldo = rand.nextDouble() * 10000;
+            double saldoMinimo = rand.nextDouble() * 500;
+            Date fechaApertura = new Date();
+            double interesAnual = 1 + (rand.nextDouble() * 4);
+            Beneficio beneficioAdicional = Beneficio.values()[rand.nextInt(Beneficio.values().length)];
+            double comisionMantenimiento = 1 + (rand.nextDouble() * 4);;
+            Comision tipoComision = Comision.values()[rand.nextInt(Comision.values().length)];
+
+            if (rand.nextBoolean()) {
+                // Crear una Cuenta de Ahorro
                 
-                // Decidir aleatoriamente si la cuenta es de tipo Ahorro o Corriente
-                if (rand.nextBoolean()) {
-                    // Cuenta Ahorro
-                    double interesAnual = rand.nextDouble() * 5; // Interés anual aleatorio entre 0 y 5
-                    String beneficioAdicional = "Beneficio_" + rand.nextInt(100); // Beneficio aleatorio
-                    
-                    CuentaAhorro cuentaAhorro = new CuentaAhorro(numeroCuenta, titular, saldo, saldoMinimo, interesAnual, beneficioAdicional, fechaApertura);
-                    out.writeObject(cuentaAhorro);
-                } else {
-                    // Cuenta Corriente
-                    double comisionMantenimiento = rand.nextDouble() * 50; // Comisión de mantenimiento aleatoria entre 0 y 50
-                    String tipoComision = "Comision_" + rand.nextInt(100); // Tipo de comisión aleatorio
-                    
-                    CuentaCorriente cuentaCorriente = new CuentaCorriente(numeroCuenta, titular, saldo, saldoMinimo, comisionMantenimiento, tipoComision, fechaApertura);
-                    out.writeObject(cuentaCorriente);
-                }
+                listaCuentas.agregar(new CuentaAhorro(numeroCuenta, titular, saldo, saldoMinimo, fechaApertura, interesAnual, beneficioAdicional));
+            } else {
+                // Crear una Cuenta Corriente
+               
+                listaCuentas.agregar(new CuentaCorriente(numeroCuenta, titular, saldo, saldoMinimo, fechaApertura, comisionMantenimiento, tipoComision));
             }
-            System.out.println("Archivo generado con éxito.");
+        }
+
+        // Guardar la lista actualizada en el archivo
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(nombreArchivo))) {
+            out.writeObject(listaCuentas);
+            System.out.println("Archivo actualizado con éxito. Total de cuentas: " + totalCuentas);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
-

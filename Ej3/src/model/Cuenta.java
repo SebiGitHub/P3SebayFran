@@ -7,7 +7,7 @@ import java.util.Date;
 public abstract class Cuenta implements Serializable {
     private static final long serialVersionUID = 1L; // Añadir un identificador de versión para la serialización
     private int numero;
-    private transient String titular;
+    private String titular;
     private double saldo;
     private double saldoMinimo;
     private Date fechaApertura;
@@ -49,9 +49,9 @@ public abstract class Cuenta implements Serializable {
         // Si es una cuenta corriente, aplicamos la comisión mensual
         
         if (this instanceof CuentaAhorro) {
-            saldo += saldo * CuentaAhorro.getInteresAnual() / 100; // Se incrementa el saldo según el interés anual
+            saldo += saldo * ((CuentaAhorro) this).getInteresAnual() / 100; // Se incrementa el saldo según el interés anual
         } else if (this instanceof CuentaCorriente) {
-            saldo -= CuentaCorriente.getComisionMantenimiento(); // Se decrementa el saldo por la comisión mensual
+            saldo -= ((CuentaCorriente) this).getComisionMantenimiento(); // Se decrementa el saldo por la comisión mensual
         }
 
         // Verificamos que el saldo no sea menor al saldo mínimo
@@ -64,6 +64,7 @@ public abstract class Cuenta implements Serializable {
 
         return true; // El cálculo fue exitoso
     }
+
 
     // Getters y Setters
     public int getNumero() {

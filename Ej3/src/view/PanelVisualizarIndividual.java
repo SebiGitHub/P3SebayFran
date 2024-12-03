@@ -115,14 +115,14 @@ public class PanelVisualizarIndividual extends JPanel {
                     panelDetalles.add(new JTextField(String.format("%.2f", cuentaCorriente.getComisionMantenimiento()), 15));
 
                     panelDetalles.add(new JLabel("Tipo de Comisión:"));
-                    panelDetalles.add(new JTextField(cuentaCorriente.getTipoComision(), 15));
+                    panelDetalles.add(new JTextField(cuentaCorriente.getTipoComision().name(), 15));
                 } else if (cuentaSeleccionada instanceof CuentaAhorro) {
                     CuentaAhorro cuentaAhorro = (CuentaAhorro) cuentaSeleccionada;
                     panelDetalles.add(new JLabel("Interés Anual:"));
                     panelDetalles.add(new JTextField(String.format("%.2f", cuentaAhorro.getInteresAnual()), 15));
 
                     panelDetalles.add(new JLabel("Beneficio Adicional:"));
-                    panelDetalles.add(new JTextField(cuentaAhorro.getBeneficioAdicional(), 15));
+                    panelDetalles.add(new JTextField(cuentaAhorro.getBeneficioAdicional().name(), 15));
                 }
 
                 panelDetalles.revalidate(); // Asegurarse de que el panel se actualice correctamente

@@ -1,10 +1,25 @@
 package view;
 
-import javax.swing.*;
-import controller.CtrlLista;
-
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Date;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+
+import controller.CtrlLista;
+import model.Comision;
+import model.CuentaAhorro;
+import model.CuentaCorriente;
 
 public class PanelAgregarCC extends JPanel {
     private JTextField txtNumero;
@@ -13,7 +28,7 @@ public class PanelAgregarCC extends JPanel {
     private JTextField txtSaldoMinimo;
     private JSpinner spinnerFecha;
     private JTextField txtComisionMantenimiento;
-    private JTextField txtTipoComision;
+    private JComboBox<Comision> comboTipoComision; // Cambiado de JTextField a JComboBox
     private JButton btnAgregar;
 
     public PanelAgregarCC(CtrlLista ctrlLista) {
@@ -83,10 +98,10 @@ public class PanelAgregarCC extends JPanel {
         spinnerFecha.setPreferredSize(new Dimension(200, 30));
         add(spinnerFecha, gbc);
 
-        // Campo Comisión de mantenimiento
+        // Campo Interés anual
         gbc.gridx = 0;
         gbc.gridy = 5;
-        add(crearEtiqueta("Comisión de mantenimiento:", etiquetaFont), gbc);
+        add(crearEtiqueta("Comisión de mantenimiento (%):", etiquetaFont), gbc);
 
         gbc.gridx = 1;
         txtComisionMantenimiento = new JTextField();
@@ -94,16 +109,16 @@ public class PanelAgregarCC extends JPanel {
         txtComisionMantenimiento.setPreferredSize(new Dimension(200, 30));
         add(txtComisionMantenimiento, gbc);
 
-        // Campo Tipo de comisión
+        // Campo Beneficio adicional (ahora un JComboBox con las opciones del enum Beneficio)
         gbc.gridx = 0;
         gbc.gridy = 6;
         add(crearEtiqueta("Tipo de comisión:", etiquetaFont), gbc);
 
         gbc.gridx = 1;
-        txtTipoComision = new JTextField();
-        txtTipoComision.setFont(campoFont);
-        txtTipoComision.setPreferredSize(new Dimension(200, 30));
-        add(txtTipoComision, gbc);
+        comboTipoComision = new JComboBox<>(Comision.values()); // Llenamos el JComboBox con los valores del enum
+        comboTipoComision.setFont(campoFont);
+        comboTipoComision.setPreferredSize(new Dimension(200, 30));
+        add(comboTipoComision, gbc);
 
         // Botón Agregar
         gbc.gridx = 1;
@@ -112,6 +127,42 @@ public class PanelAgregarCC extends JPanel {
         btnAgregar.setFont(new Font("Arial", Font.BOLD, 16));
         btnAgregar.setPreferredSize(new Dimension(200, 40)); // Tamaño más grande
         add(btnAgregar, gbc);
+
+        // Acción al presionar el botón Agregar
+        btnAgregar.addActionListener(e -> {
+            try {
+                // Crear la cuenta según los datos ingresados
+                int numero = Integer.parseInt(txtNumero.getText());
+                String titular = txtTitular.getText();
+                double saldo = Double.parseDouble(txtSaldo.getText());
+                double saldoMinimo = Double.parseDouble(txtSaldoMinimo.getText());
+                Date fechaApertura = (Date) spinnerFecha.getValue();
+
+                // Crear la cuenta de ahorro (o puedes usar otra clase según sea necesario)
+                double comisionMantenimiento = Double.parseDouble(txtComisionMantenimiento.getText());
+                Comision tipoComision = (Comision) comboTipoComision.getSelectedItem(); // Obtener el beneficio seleccionado
+
+                // Crear la cuenta de ahorro (o de otro tipo si es necesario)
+                CuentaCorriente nuevaCuenta = new CuentaCorriente(numero, titular, saldo, saldoMinimo, fechaApertura, comisionMantenimiento, tipoComision);
+
+                // Agregar la cuenta al controlador
+                ctrlLista.agregarCuenta(nuevaCuenta);
+
+                // Mostrar mensaje de éxito
+                JOptionPane.showMessageDialog(this, "Cuenta agregada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                // Limpiar los campos
+                txtNumero.setText("");
+                txtTitular.setText("");
+                txtSaldo.setText("");
+                txtSaldoMinimo.setText("");
+                spinnerFecha.setValue(new Date());
+                txtComisionMantenimiento.setText("");
+                comboTipoComision.setSelectedIndex(0); // Reseteamos el combo box al primer valor
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     // Método para crear etiquetas con estilo personalizado
@@ -119,38 +170,5 @@ public class PanelAgregarCC extends JPanel {
         JLabel etiqueta = new JLabel(texto);
         etiqueta.setFont(font);
         return etiqueta;
-    }
-
-    // Métodos para obtener los valores de los campos
-    public int getNumero() throws NumberFormatException {
-        return Integer.parseInt(txtNumero.getText());
-    }
-
-    public String getTitular() {
-        return txtTitular.getText();
-    }
-
-    public double getSaldo() throws NumberFormatException {
-        return Double.parseDouble(txtSaldo.getText());
-    }
-
-    public double getSaldoMinimo() throws NumberFormatException {
-        return Double.parseDouble(txtSaldoMinimo.getText());
-    }
-
-    public Date getFechaApertura() {
-        return (Date) spinnerFecha.getValue();
-    }
-
-    public double getComisionMantenimiento() throws NumberFormatException {
-        return Double.parseDouble(txtComisionMantenimiento.getText());
-    }
-
-    public String getTipoComision() {
-        return txtTipoComision.getText();
-    }
-
-    public JButton getBtnAgregar() {
-        return btnAgregar;
     }
 }

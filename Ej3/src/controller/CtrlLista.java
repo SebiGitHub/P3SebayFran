@@ -12,9 +12,12 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import model.Beneficio;
+import model.Comision;
 import model.Cuenta;
 import model.CuentaAhorro;
 import model.CuentaCorriente;
+import model.Titular;
 
 public class CtrlLista {
     private Lista<Cuenta> lista;
@@ -72,10 +75,10 @@ public class CtrlLista {
     // Cargar datos de prueba
     public void cargarPruebas() {
         // Cambiar add() a agregar() para que coincida con el método definido en la clase Lista
-        lista.agregar(new CuentaAhorro(1, "Usuario 1", 1000, 500, 2.5, "Otro Atributo 1", new Date()));
-        lista.agregar(new CuentaAhorro(2, "Usuario 2", 2000, 1000, 3.0, "Otro Atributo 2", new Date()));
-        lista.agregar(new CuentaCorriente(3, "Usuario 3", 1500, 500, 10, "Mensual", new Date()));
-        lista.agregar(new CuentaCorriente(4, "Usuario 4", 3000, 2000, 15, "Mensual", new Date()));
+        lista.agregar(new CuentaAhorro(1, Titular.TITULAR_16.getNombre(), 1000, 500, new Date(),  2.4, Beneficio.BAJO));
+        lista.agregar(new CuentaAhorro(2, Titular.TITULAR_16.getNombre(), 2000, 1000, new Date(), 34.0, Beneficio.ALTO));
+        lista.agregar(new CuentaCorriente(3, Titular.TITULAR_4.getNombre(), 1500, 500, new Date(), 10, Comision.MEDIA));
+        lista.agregar(new CuentaCorriente(4, Titular.TITULAR_18.getNombre(), 3000, 2000, new Date(), 12, Comision.ALTA));
         JOptionPane.showMessageDialog(null, "Datos de prueba cargados.");
     }
 
@@ -84,5 +87,12 @@ public class CtrlLista {
     public List<Cuenta> obtenerDatosLista() {
         return lista.obtenerTodos(); // lista es una estructura que contiene las cuentas
     }
+    
+    
+    //Agregar
+    public void agregarCuenta(Cuenta cuenta) {
+    	lista.agregar(cuenta);  // O donde estés almacenando las cuentas
+    }
+
 
 }

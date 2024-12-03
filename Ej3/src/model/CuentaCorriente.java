@@ -5,17 +5,17 @@ import java.util.Date;
 
 public class CuentaCorriente extends Cuenta implements Serializable{
     private static final long serialVersionUID = 1L; // Añadir un identificador de versión para la serialización
-    private static double comisionMantenimiento;
-    private String tipoComision;
+    private double comisionMantenimiento;
+    private Comision tipoComision;
 
-    public CuentaCorriente(int numero, String titular, double saldo, double saldoMinimo, 
-                           double comisionMantenimiento, String tipoComision, Date fechaApertura) {
+    public CuentaCorriente(int numero, String titular, double saldo, double saldoMinimo, Date fechaApertura,
+                           double comisionMantenimiento, Comision tipoComision) {
         super(numero, titular, saldo, saldoMinimo, fechaApertura);
         this.comisionMantenimiento = comisionMantenimiento;
         this.tipoComision = tipoComision;
     }
 
-    public static double getComisionMantenimiento() {
+    public double getComisionMantenimiento() {
         return comisionMantenimiento;
     }
 
@@ -23,11 +23,11 @@ public class CuentaCorriente extends Cuenta implements Serializable{
         this.comisionMantenimiento = comisionMantenimiento;
     }
 
-    public String getTipoComision() {
+    public Comision getTipoComision() {
         return tipoComision;
     }
 
-    public void setTipoComision(String tipoComision) {
+    public void setTipoComision(Comision tipoComision) {
         this.tipoComision = tipoComision;
     }
 
