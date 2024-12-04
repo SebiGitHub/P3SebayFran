@@ -39,7 +39,7 @@ public abstract class Cuenta implements Serializable {
     }
 
     // Método para calcular el saldo
-    public boolean calcularSaldo() throws Exception {
+    public boolean calcularSaldo() throws SaldoInferiorException {
         if (!isPeriodoCumplido()) {
             return false; // No se cumple el periodo para el cálculo
         }
@@ -56,7 +56,7 @@ public abstract class Cuenta implements Serializable {
 
         // Verificamos que el saldo no sea menor al saldo mínimo
         if (saldo < saldoMinimo) {
-            throw new Exception("El saldo es inferior al saldo mínimo.");
+            throw new SaldoInferiorException("El saldo es inferior al saldo mínimo.");
         }
 
         // Actualizamos la fecha de la última operación

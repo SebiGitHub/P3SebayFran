@@ -32,20 +32,20 @@ public class CtrlLista {
 
     // Cargar datos desde un archivo
     public void cargarDesdeArchivo(File archivo) {
-    	//Comprueba si existe el archivo
+    	//Comprueba si existe el archivo.
     	if (archivo.exists()) {
-    		//Abre el archivo e intenta leerlo
+    		//Abre el archivo e intenta leerlo.
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
                 Object obj = ois.readObject();
-                //Lee el archivo y te muestra que tipo de archivo está leyendo
+                //Lee el archivo y te muestra que tipo de archivo está leyendo.
                 System.out.println("Tipo de objeto deserializado: " + obj.getClass().getName());
-                //Comprueba que tipo de archivo está leyendo y guarda valor a valor en la lista
+                //Comprueba que tipo de archivo está leyendo y guarda valor a valor en la lista.
                 if (obj instanceof Lista) {
                     lista = (Lista<Cuenta>) obj;
                     //Mensaje de que todo salió bien
                     JOptionPane.showMessageDialog(null, "Datos cargados correctamente.");
                 } else {
-                	//Fallo, habrá algún elemento que no pertenesca ni a cuenta corriente ni a la de ahorro
+                	//Fallo, habrá algún elemento que no pertenezca ni a cuenta corriente ni a la de ahorro.
                     JOptionPane.showMessageDialog(null, "El archivo no contiene una lista válida.");
                 }//Excepciones
             } catch (IOException | ClassNotFoundException e) {
@@ -74,8 +74,7 @@ public class CtrlLista {
 
     // Cargar datos de prueba
     public void cargarPruebas() {
-        // Cambiar add() a agregar() para que coincida con el método definido en la clase Lista
-    	
+        // Cambiar add() a agregar() para que coincida con el método definido en la clase Lista 	
     	Calendar calendar = Calendar.getInstance();
 
     	// Establecer la fecha a la actual
